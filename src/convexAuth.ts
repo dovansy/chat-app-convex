@@ -38,7 +38,7 @@ export function useConvexAuth() {
   }, [TOKEN_KEY]);
 
   const fetchAccessToken = useCallback(
-    async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
+    async ({}: { forceRefreshToken: boolean }) => {
       return readToken() || null;
     },
     []
