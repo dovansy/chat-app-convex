@@ -7,15 +7,12 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import { useChat } from '../../context/ChatContext';
 import AddNewChatDialog from '../AddNewChatDialog/AddNewChatDialog';
 import ChatItem from '../ChatItem';
+import { useAuth } from '../../context/AuthContext';
 
 const ChatList = () => {
   const groups = useQuery(api.functions.groups.listGroups) || [];
   const createGroup = useMutation(api.functions.groups.createGroup);
-  // const joinGroup = useMutation(api.functions.groups.joinGroup);
-  const profile = useQuery(api.functions.getProfile.getProfile);
-  const userProfile = useQuery(api.functions.getProfile.getUserByEmail, {
-    email: profile?.email ?? '',
-  });
+  const { currentUser } = useAuth();
   const deleteGroup = useMutation(api.functions.groups.deleteGroup);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -62,7 +59,7 @@ const ChatList = () => {
         <Typography variant='subtitle1' fontWeight={600}>
           {`Chat${groups.length > 1 ? 's' : ''} (${groups.length})`}
         </Typography>
-        {userProfile?.role === 'admin' && (
+        {currentUser?.role === 'admin' && (
           <Button
             size='small'
             variant='contained'
@@ -82,13 +79,13 @@ const ChatList = () => {
             isActive={currentGroupSelect === item._id}
             onSelect={setCurrentGroupSelect}
             onDelete={() => handleDelete(item._id)}
-            userProfile={userProfile}
+            userProfile={currentUser}
           />
         ))}
       </Box>
 
       {/* Add Chat Dialog */}
-      {userProfile?.role === 'admin' && (
+      {currentUser?.role === 'admin' && (
         <AddNewChatDialog
           loading={loading}
           open={open}

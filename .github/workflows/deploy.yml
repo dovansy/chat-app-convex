@@ -1,0 +1,24 @@
+name: Deploy FE + Convex
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install -g convex vercel
+
+      # Deploy Convex
+      - run: npx convex deploy ./convex
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      # Deploy Frontend (Vercel)
+      - run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} ./frontend
