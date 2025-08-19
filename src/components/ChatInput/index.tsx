@@ -5,11 +5,10 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { useRef, useState } from 'react';
-import { useChat } from '../../context/ChatContext';
 import { useMutation } from 'convex/react';
+import { useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
-import { useAuth } from '../../context/AuthContext';
+import { useChat } from '../../context/ChatContext';
 
 interface EmojiMartEmoji {
   id: string;
@@ -22,7 +21,6 @@ interface EmojiMartEmoji {
 
 const ChatInput = () => {
   const { currentGroupSelect } = useChat();
-  const { currentUser } = useAuth();
   const sendMessage = useMutation(api.functions.messages.sendMessage);
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -32,14 +30,13 @@ const ChatInput = () => {
   const handleFileSelect = () => {
     // Logic select file and send message
   };
-
+  console.log('currentGroupSelect', currentGroupSelect);
   const handleSend = async () => {
     try {
       if (!currentGroupSelect || !message.trim()) return;
       setLoading(true);
       await sendMessage({
         groupId: currentGroupSelect,
-        senderId: currentUser?._id,
         text: message?.trim(),
       });
 

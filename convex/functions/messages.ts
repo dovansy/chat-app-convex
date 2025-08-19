@@ -2,11 +2,22 @@ import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 
 export const sendMessage = mutation({
-  args: { groupId: v.id('groups'), senderId: v.id('users'), text: v.string() },
+  args: { groupId: v.id('groups'), text: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error('Not authenticated');
+
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_token', (q) =>
+        q.eq('tokenIdentifier', identity.tokenIdentifier)
+      )
+      .unique();
+    if (!user) throw new Error('User not found');
+
     await ctx.db.insert('messages', {
       groupId: args.groupId,
-      senderId: args.senderId,
+      senderId: user._id,
       text: args.text,
       createdAt: Date.now(),
     });

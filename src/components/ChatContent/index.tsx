@@ -4,12 +4,12 @@ import Typography from '@mui/material/Typography';
 import { useQuery } from 'convex/react';
 import { useEffect, useRef } from 'react';
 import { api } from '../../../convex/_generated/api';
-import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
+import { useProfile } from '../../hooks/useProfile';
 
 const ChatContent = () => {
   const { currentGroupSelect } = useChat();
-  const { currentUser } = useAuth();
+  const currentUser = useProfile();
 
   const messages = useQuery(
     api.functions.messages.getMessages,
@@ -44,7 +44,7 @@ const ChatContent = () => {
           key={msg._id}
           display='flex'
           justifyContent={
-            msg.senderId === currentUser._id ? 'flex-end' : 'flex-start'
+            msg.senderId === currentUser?._id ? 'flex-end' : 'flex-start'
           }
         >
           <Box
@@ -54,7 +54,7 @@ const ChatContent = () => {
             display='flex'
             flexDirection={'column'}
           >
-            {msg.senderId !== currentUser._id && (
+            {msg.senderId !== currentUser?._id && (
               <Typography
                 variant='caption'
                 sx={{ color: 'grey.800', mb: 0.5, textAlign: 'left' }}
@@ -68,14 +68,14 @@ const ChatContent = () => {
                 py: 1,
                 borderRadius: 2,
                 bgcolor:
-                  msg.senderId === currentUser._id
+                  msg.senderId === currentUser?._id
                     ? 'success.main'
                     : 'grey.800',
                 color: 'white',
                 borderBottomRightRadius:
-                  msg.senderId === currentUser._id ? 0 : 8,
+                  msg.senderId === currentUser?._id ? 0 : 8,
                 borderBottomLeftRadius:
-                  msg.senderId === currentUser._id ? 8 : 0,
+                  msg.senderId === currentUser?._id ? 8 : 0,
                 textAlign: 'left',
               }}
             >

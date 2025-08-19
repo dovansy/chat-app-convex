@@ -1,10 +1,11 @@
-import { defineAuthConfig } from '@convex-dev/auth/server';
-
-export default defineAuthConfig({
+export default {
   providers: [
     {
-      domain: 'https://accounts.google.com',
-      applicationID: process.env.GOOGLE_CLIENT_ID,
+      type: 'customJwt',
+      applicationID: process.env.GOOGLE_APPLICATION_ID,
+      issuer: 'https://accounts.google.com',
+      jwks: 'https://www.googleapis.com/oauth2/v3/certs',
+      algorithm: 'RS256',
     },
   ],
-});
+};

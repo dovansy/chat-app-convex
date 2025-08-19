@@ -5,14 +5,14 @@ import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useChat } from '../../context/ChatContext';
+import { useProfile } from '../../hooks/useProfile';
 import AddNewChatDialog from '../AddNewChatDialog/AddNewChatDialog';
 import ChatItem from '../ChatItem';
-import { useAuth } from '../../context/AuthContext';
 
 const ChatList = () => {
+  const currentUser = useProfile();
   const groups = useQuery(api.functions.groups.listGroups) || [];
   const createGroup = useMutation(api.functions.groups.createGroup);
-  const { currentUser } = useAuth();
   const deleteGroup = useMutation(api.functions.groups.deleteGroup);
   const [loading, setLoading] = useState<boolean>(false);
 
